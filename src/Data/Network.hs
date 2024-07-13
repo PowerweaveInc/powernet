@@ -244,16 +244,14 @@ edges = fromGraph
 
 -- | Construct a 'Network' using '-<' and '>-':
 --
--- >>> 'x' -< (0::Capacity Int) >- 'y'
--- MkNetwork {unNetwork = Connect 0 (Vertex 'x') (Vertex 'y')}
+-- >>> (node 'x' 0) -< (0::Capacity Int) >- (node 'y' 0)
 (-<) :: Node n a -> Capacity e -> (Node n a, Capacity e)
 (-<) = (,)
 
 
 -- | Construct a 'Network' using '-<' and '>-':
 --
--- >>> 'x' -< (0::Capacity Int) >- 'y'
--- MkNetwork {unNetwork = Connect 0 (Vertex 'x') (Vertex 'y')}
+-- >>> (node 'x' 0) -< (0::Capacity Int) >- (node 'y' 0)
 (>-) :: Ord n => (Node n a, Capacity e) -> Node n a -> Network e n a
 (x, e) >- y = edge e x y
 
