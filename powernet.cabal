@@ -1,0 +1,54 @@
+cabal-version:      3.6
+name:               powernet
+version:            0.1.0.0
+synopsis:           Definition and manipulation of power network topologies
+homepage:           https://powerweave.io
+license:            MIT
+author:             Laurent P. René de Cotret
+maintainer:         laurent@powerweave.io
+category:           Math
+build-type:         Simple
+tested-with:        GHC ==9.8.2
+
+source-repository head
+  type:     git
+  location: https://github.com/PowerweaveInc/powernet
+
+common common-options
+    ghc-options: -Wall
+                 -Wcompat
+                 -Widentities
+                 -Wincomplete-uni-patterns
+                 -Wincomplete-record-updates
+                 -Wredundant-constraints
+                 -fhide-source-paths
+                 -Wpartial-fields
+                 -Wunused-packages
+    default-language: GHC2021
+
+library
+    import:           common-options
+    exposed-modules:  Data.Network
+    other-modules:    Data.Bimap.Strict    
+    build-depends:      algebraic-graphs ^>=0.7
+                      , base              >=4.17 && <4.21
+                      , containers        >=0.6  && <0.8
+                      , deepseq          ^>=1.5
+                      , exceptions       ^>=0.10
+                      , text              >=2.0  && <2.2
+    hs-source-dirs:   src
+
+test-suite powernet-test
+    import:           common-options
+    other-modules:    Test.Data.Network
+    -- other-extensions:
+    type:             exitcode-stdio-1.0
+    hs-source-dirs:   test
+    main-is:          Main.hs
+    build-depends:    algebraic-graphs
+                    , base
+                    , hedgehog
+                    , tasty
+                    , powernet
+                    , tasty-hedgehog
+                    

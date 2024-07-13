@@ -1,0 +1,49 @@
+name: Continuous Integration
+
+on:
+  push:
+
+jobs:
+  continuous-integration:
+    if: contains(toJson(github.event.commits), '[ci skip]') == false && contains(toJson(github.event.commits), '[skip ci]') == false
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
+
+    - name: Install cabal/ghc
+      uses: haskell-actions/setup@v2
+      id: setup-haskell
+      with:
+        ghc-version: '9.8.2'
+        cabal-version: '3.10.3.0'
+    
+    - name: Generate freeze file
+      run: |
+        cabal update
+        cabal configure --disable-optimization
+        cabal freeze
+    
+    - name: Cache cabal work
+      uses: actions/cache@v4
+      with:
+        path: |
+          dist-newstyle
+          ${{ steps.setup-haskell.outputs.cabal-store }}
+        # We are using the hash of 'cabal.project.local' so that different levels
+        # of optimizations are cached separately
+        key: ${{ runner.os }}-${{ hashFiles('cabal.project', 'cabal.project.freeze', 'cabal.project.local') }}-cabal-install
+    
+    - name: Build dependencies
+      run: |
+        cabal build --enable-tests --only-dependencies
+    
+    - name: Build powernet
+      run: |
+        cabal build --enable-tests
+        
+    - name: Run tests
+      run: |
+        cabal test
