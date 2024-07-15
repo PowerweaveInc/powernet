@@ -1,4 +1,4 @@
-# powernet -- graphs with edges labeled by capacity
+# powernet -- algebraic graphs with edges labeled by capacity
 
 This package implements `Network`s, graph data structures where edges are labeled by capacity.
 
